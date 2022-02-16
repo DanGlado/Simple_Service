@@ -1,14 +1,11 @@
 package com.example.simple_service;
 
-import android.app.AlarmManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.concurrent.TimeUnit;
 
 public class MyService extends Service {
 
@@ -36,10 +33,18 @@ public class MyService extends Service {
     }
 
     void someTask() {
-        DateFormat timeFormat = new SimpleDateFormat("HH:mm:ss");
-        Calendar cali = Calendar.getInstance();
-        cali.getTime();
-        String time = timeFormat.format(cali.getTimeInMillis());
-        System.out.println(timeFormat.format(cali.getTimeInMillis()));
+        new Thread(new Runnable() {
+            public void run() {
+                for (int i = 1; i<=25; i++) {
+                    Log.d(LOG_TAG, "i = " + i);
+                    try {
+                        TimeUnit.SECONDS.sleep(1);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+                stopSelf();
+            }
+        }).start();
     }
 }
